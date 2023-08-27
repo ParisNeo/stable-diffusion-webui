@@ -9,6 +9,7 @@
 from pathlib import Path
 import os
 import sys
+from lollms.helpers import ASCIIColors, trace_exception
 from lollms.paths import LollmsPaths
 from lollms.config import TypedConfig, ConfigTemplate, BaseConfig
 import time
@@ -155,7 +156,6 @@ class LollmsSD:
     def __init__(
                     self, 
                     lollms_path:LollmsPaths, 
-                    personality_config: TypedConfig, 
                     wm = "Artbot", 
                     max_retries=50,
                     sampler="Euler a",
@@ -166,6 +166,7 @@ class LollmsSD:
                     ):
         # Get the current directory
         root_dir = lollms_path.personal_path
+        self.personality_script = personality_script
         current_dir = Path(__file__).resolve().parent
         self.wm = wm
 
@@ -197,6 +198,111 @@ class LollmsSD:
             self.set_auth(username, password)
         else:
             self.check_controlnet()
+
+    def paint(
+                self,
+                sd_positive_prompt,
+                sd_negative_prompt,
+                output ="",
+                num_images=1,
+                seed=-1,
+                scale=7.5,
+                steps=20,
+                img2img_denoising_strength=0.9,
+                width=512,
+                height=512,
+                thumbneil_width=512,
+                thumbneil_height=512,
+                restore_faces=True,
+                ):
+        files = []
+        infos = {}
+        for i in range(num_images):
+            self.step_start(f"Building image number {i+1}/{num_images}")
+            if len(self.files)>0:
+                try:
+                    generated = self.img2img(
+                                sd_positive_prompt,
+                                sd_negative_prompt, 
+                                [self.loadImage(self.files[-1])],
+                                sampler_name="Euler",
+                                seed=seed,
+                                cfg_scale=scale,
+                                steps=steps,
+                                width=width,
+                                height=height,
+                                denoising_strength=img2img_denoising_strength,
+                                tiling=False,
+                                restore_faces=restore_faces,
+                                styles=None, 
+                                script_name="",
+                                )
+                    """
+                        images: list
+                        parameters: dict
+                        info: dict
+                    """
+                    img_paths = []
+                    for img in generated.images:
+                        img_paths.append(self.saveImage(img))
+                    files += img_paths
+                    infos = generated.info
+                except Exception as ex:
+                    ASCIIColors.error("Couldn't generate the image")
+                    trace_exception(ex)  
+            else:
+                try:
+                    generated = self.txt2img(
+                                sd_positive_prompt,
+                                negative_prompt=sd_negative_prompt, 
+                                sampler_name="Euler",
+                                seed=seed,
+                                cfg_scale=scale,
+                                steps=steps,
+                                width=width,
+                                height=height,
+                                tiling=False,
+                                restore_faces=restore_faces,
+                                styles=None, 
+                                script_name="",
+                                )
+                    """
+                        images: list
+                        parameters: dict
+                        info: dict
+                    """
+                    img_paths = []
+                    for img in generated.images:
+                        img_paths.append(self.saveImage(img))
+                    files += img_paths  
+                    infos = generated.info
+                except Exception as ex:
+                    ASCIIColors.error("Couldn't generate the image")
+                    trace_exception(ex)  
+            if len(files)>0:
+                f = str(files[-1]).replace("\\","/")
+                pth = f.split('/')
+                idx = pth.index("outputs")
+                pth = "/".join(pth[idx:])
+                file_path = f"""<div class="flex justify-center items-center cursor-pointer">
+    <img id="Artbot_912" src="/{pth}" alt="Artbot generated image" class="object-cover" style="width:{thumbneil_width}px;height:{thumbneil_height}px">
+</div>\n"""
+                self.full(file_path)
+            
+            self.step_end(f"Building image number {i+1}/{num_images}")
+        
+        for i in range(len(files)):
+            files[i] = str(files[i]).replace("\\","/")
+            pth = files[i].split('/')
+            idx = pth.index("outputs")
+            pth = "/".join(pth[idx:])
+            file_path = f"""<div class="flex justify-center items-center cursor-pointer">
+    <img id="Artbot_912" src="/{pth}" alt="Artbot generated image" class="object-cover" style="width:{thumbneil_width}px;height:{thumbneil_height}px">
+</div>\n"""
+            output += file_path
+            ASCIIColors.yellow(f"Generated file in here : {files[i]}")
+
+        return files, output, infos
 
     def check_controlnet(self):
         try:
