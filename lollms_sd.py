@@ -203,7 +203,9 @@ class LollmsSD:
                 self,
                 sd_positive_prompt,
                 sd_negative_prompt,
+                files=[],
                 output ="",
+                sampler_name="Euler",
                 num_images=1,
                 seed=-1,
                 scale=7.5,
@@ -219,13 +221,13 @@ class LollmsSD:
         infos = {}
         for i in range(num_images):
             self.step_start(f"Building image number {i+1}/{num_images}")
-            if len(self.files)>0:
+            if len(files)>0:
                 try:
                     generated = self.img2img(
                                 sd_positive_prompt,
                                 sd_negative_prompt, 
-                                [self.loadImage(self.files[-1])],
-                                sampler_name="Euler",
+                                [self.loadImage(files[-1])],
+                                sampler_name=sampler_name,
                                 seed=seed,
                                 cfg_scale=scale,
                                 steps=steps,
@@ -255,7 +257,7 @@ class LollmsSD:
                     generated = self.txt2img(
                                 sd_positive_prompt,
                                 negative_prompt=sd_negative_prompt, 
-                                sampler_name="Euler",
+                                sampler_name=sampler_name,
                                 seed=seed,
                                 cfg_scale=scale,
                                 steps=steps,
