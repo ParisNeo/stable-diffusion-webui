@@ -166,7 +166,6 @@ class LollmsSD:
                     ):
         # Get the current directory
         root_dir = lollms_path.personal_path
-        self.personality_script = personality_script
         current_dir = Path(__file__).resolve().parent
         self.wm = wm
 
