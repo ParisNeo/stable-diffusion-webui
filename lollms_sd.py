@@ -216,11 +216,15 @@ class LollmsSD:
                 thumbneil_width=512,
                 thumbneil_height=512,
                 restore_faces=True,
+                step_start_callback=None,
+                step_end_callback=None,
+                file_ready_callback=None
                 ):
         files = []
         infos = {}
         for i in range(num_images):
-            self.step_start(f"Building image number {i+1}/{num_images}")
+            if step_start_callback:
+                step_start_callback(f"Building image number {i+1}/{num_images}")
             if len(files)>0:
                 try:
                     generated = self.img2img(
@@ -289,9 +293,11 @@ class LollmsSD:
                 file_path = f"""<div class="flex justify-center items-center cursor-pointer">
     <img id="Artbot_912" src="/{pth}" alt="Artbot generated image" class="object-cover" style="width:{thumbneil_width}px;height:{thumbneil_height}px">
 </div>\n"""
-                self.full(file_path)
+                if file_ready_callback:
+                    file_ready_callback(file_path)
             
-            self.step_end(f"Building image number {i+1}/{num_images}")
+            if step_end_callback:
+                step_end_callback(f"Building image number {i+1}/{num_images}")
         
         for i in range(len(files)):
             files[i] = str(files[i]).replace("\\","/")
