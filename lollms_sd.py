@@ -176,7 +176,7 @@ class LollmsSD:
         self.sd_folder = shared_folder / "auto_sd"
         self.output_dir = root_dir / "outputs/sd"
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        if not self.wait_for_service(1):
+        if not self.wait_for_service(1,False):
             # Launch the Flask service using the appropriate script for the platform
             if platform.system() == "Windows":
                 script_path = self.sd_folder / "lollms_webui.bat"
@@ -957,7 +957,7 @@ class LollmsSD:
 
 
 
-    def wait_for_service(self, max_retries = 50):
+    def wait_for_service(self, max_retries = 50, show_warning=True):
         url = f"{self.auto_sd_base_url}/internal/ping"
         # Adjust this value as needed
         retries = 0
@@ -973,8 +973,8 @@ class LollmsSD:
 
             retries += 1
             time.sleep(1)
-
-        print("Service did not become available within the given time.")
+        if show_warning:
+            print("Service did not become available within the given time.")
         return False
     
     def get_available_image_name(self, save_folder, base_name):
