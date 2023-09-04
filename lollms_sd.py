@@ -199,7 +199,9 @@ class LollmsSD:
             else:
                 ASCIIColors.info("Running on linux/MacOs")
                 script_path = str(self.sd_folder / "lollms_sd.sh")
-                completed_process = subprocess.run(['bash', script_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                ASCIIColors.info(f"launcher path: {script_path}")
+
+                completed_process = subprocess.run(['bash', script_path])
                 ASCIIColors.info("Process done")
                 if completed_process==0:
                     ASCIIColors.success("Launching Auto1111's SD succeeded")
