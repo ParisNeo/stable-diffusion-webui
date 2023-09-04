@@ -291,7 +291,7 @@ class LollmsSD:
                 trace_exception(ex)  
 
 
-        return img_paths, infos
+        return img_paths[0], infos
 
     def check_controlnet(self):
         try:
