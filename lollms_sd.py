@@ -232,6 +232,7 @@ class LollmsSD:
                 restore_faces=True,
                 ):
         infos = {}
+        img_paths = []
         if len(files)>0:
             try:
                 generated = self.img2img(
@@ -255,10 +256,8 @@ class LollmsSD:
                     parameters: dict
                     info: dict
                 """
-                img_paths = []
                 for img in generated.images:
                     img_paths.append(self.saveImage(img))
-                files += img_paths
                 infos = generated.info
             except Exception as ex:
                 ASCIIColors.error("Couldn't generate the image")
@@ -284,17 +283,15 @@ class LollmsSD:
                     parameters: dict
                     info: dict
                 """
-                img_paths = []
                 for img in generated.images:
                     img_paths.append(self.saveImage(img))
-                files += img_paths  
                 infos = generated.info
             except Exception as ex:
                 ASCIIColors.error("Couldn't generate the image")
                 trace_exception(ex)  
 
 
-        return files, infos
+        return img_paths, infos
 
     def check_controlnet(self):
         try:
