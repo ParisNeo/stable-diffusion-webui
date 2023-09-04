@@ -181,7 +181,7 @@ class LollmsSD:
             if platform.system() == "Windows":
                 script_path = self.sd_folder / "lollms_webui.bat"
             else:
-                script_path = self.sd_folder / "lollms_webui.sh"
+                script_path = "bash " + str(self.sd_folder / "lollms_webui.sh")
 
             subprocess.Popen(script_path, cwd=self.sd_folder)
 
