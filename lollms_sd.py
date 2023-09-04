@@ -222,113 +222,79 @@ class LollmsSD:
                 sd_positive_prompt,
                 sd_negative_prompt,
                 files=[],
-                output ="",
                 sampler_name="Euler",
-                num_images=1,
                 seed=-1,
                 scale=7.5,
                 steps=20,
                 img2img_denoising_strength=0.9,
                 width=512,
                 height=512,
-                thumbneil_width=512,
-                thumbneil_height=512,
                 restore_faces=True,
-                step_start_callback=None,
-                step_end_callback=None,
-                file_ready_callback=None
                 ):
-        files = []
         infos = {}
-        for i in range(num_images):
-            if step_start_callback:
-                step_start_callback(f"Building image number {i+1}/{num_images}")
-            if len(files)>0:
-                try:
-                    generated = self.img2img(
-                                sd_positive_prompt,
-                                sd_negative_prompt, 
-                                [self.loadImage(files[-1])],
-                                sampler_name=sampler_name,
-                                seed=seed,
-                                cfg_scale=scale,
-                                steps=steps,
-                                width=width,
-                                height=height,
-                                denoising_strength=img2img_denoising_strength,
-                                tiling=False,
-                                restore_faces=restore_faces,
-                                styles=None, 
-                                script_name="",
-                                )
-                    """
-                        images: list
-                        parameters: dict
-                        info: dict
-                    """
-                    img_paths = []
-                    for img in generated.images:
-                        img_paths.append(self.saveImage(img))
-                    files += img_paths
-                    infos = generated.info
-                except Exception as ex:
-                    ASCIIColors.error("Couldn't generate the image")
-                    trace_exception(ex)  
-            else:
-                try:
-                    generated = self.txt2img(
-                                sd_positive_prompt,
-                                negative_prompt=sd_negative_prompt, 
-                                sampler_name=sampler_name,
-                                seed=seed,
-                                cfg_scale=scale,
-                                steps=steps,
-                                width=width,
-                                height=height,
-                                tiling=False,
-                                restore_faces=restore_faces,
-                                styles=None, 
-                                script_name="",
-                                )
-                    """
-                        images: list
-                        parameters: dict
-                        info: dict
-                    """
-                    img_paths = []
-                    for img in generated.images:
-                        img_paths.append(self.saveImage(img))
-                    files += img_paths  
-                    infos = generated.info
-                except Exception as ex:
-                    ASCIIColors.error("Couldn't generate the image")
-                    trace_exception(ex)  
-            if len(files)>0:
-                f = str(files[-1]).replace("\\","/")
-                pth = f.split('/')
-                idx = pth.index("outputs")
-                pth = "/".join(pth[idx:])
-                file_path = f"""<div class="flex justify-center items-center cursor-pointer">
-    <img id="Artbot_912" src="/{pth}" alt="Artbot generated image" class="object-cover" style="width:{thumbneil_width}px;height:{thumbneil_height}px">
-</div>\n"""
-                if file_ready_callback:
-                    file_ready_callback(file_path)
-            
-            if step_end_callback:
-                step_end_callback(f"Building image number {i+1}/{num_images}")
-        
-        for i in range(len(files)):
-            files[i] = str(files[i]).replace("\\","/")
-            pth = files[i].split('/')
-            idx = pth.index("outputs")
-            pth = "/".join(pth[idx:])
-            file_path = f"""<div class="flex justify-center items-center cursor-pointer">
-    <img id="Artbot_912" src="/{pth}" alt="Artbot generated image" class="object-cover" style="width:{thumbneil_width}px;height:{thumbneil_height}px">
-</div>\n"""
-            output += file_path
-            ASCIIColors.yellow(f"Generated file in here : {files[i]}")
+        if len(files)>0:
+            try:
+                generated = self.img2img(
+                            sd_positive_prompt,
+                            sd_negative_prompt, 
+                            [self.loadImage(files[-1])],
+                            sampler_name=sampler_name,
+                            seed=seed,
+                            cfg_scale=scale,
+                            steps=steps,
+                            width=width,
+                            height=height,
+                            denoising_strength=img2img_denoising_strength,
+                            tiling=False,
+                            restore_faces=restore_faces,
+                            styles=None, 
+                            script_name="",
+                            )
+                """
+                    images: list
+                    parameters: dict
+                    info: dict
+                """
+                img_paths = []
+                for img in generated.images:
+                    img_paths.append(self.saveImage(img))
+                files += img_paths
+                infos = generated.info
+            except Exception as ex:
+                ASCIIColors.error("Couldn't generate the image")
+                trace_exception(ex)  
+        else:
+            try:
+                generated = self.txt2img(
+                            sd_positive_prompt,
+                            negative_prompt=sd_negative_prompt, 
+                            sampler_name=sampler_name,
+                            seed=seed,
+                            cfg_scale=scale,
+                            steps=steps,
+                            width=width,
+                            height=height,
+                            tiling=False,
+                            restore_faces=restore_faces,
+                            styles=None, 
+                            script_name="",
+                            )
+                """
+                    images: list
+                    parameters: dict
+                    info: dict
+                """
+                img_paths = []
+                for img in generated.images:
+                    img_paths.append(self.saveImage(img))
+                files += img_paths  
+                infos = generated.info
+            except Exception as ex:
+                ASCIIColors.error("Couldn't generate the image")
+                trace_exception(ex)  
 
-        return files, output, infos
+
+        return files, infos
 
     def check_controlnet(self):
         try:
