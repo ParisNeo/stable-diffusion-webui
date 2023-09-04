@@ -201,7 +201,7 @@ class LollmsSD:
                 script_path = str(self.sd_folder / "lollms_sd.sh")
                 ASCIIColors.info(f"launcher path: {script_path}")
 
-                with subprocess.Popen(['bash', script_path], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True) as process:
+                with subprocess.Popen(['bash', script_path], cwd=self.sd_folder, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True) as process:
                     for line in process.stdout:
                         # Print the output line by line
                         print(line, end='')
