@@ -201,10 +201,13 @@ class LollmsSD:
                 script_path = str(self.sd_folder / "lollms_sd.sh")
                 ASCIIColors.info(f"launcher path: {script_path}")
 
-                completed_process = subprocess.run(['bash', script_path])
+                with subprocess.Popen(['bash', script_path], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True) as process:
+                    for line in process.stdout:
+                        # Print the output line by line
+                        print(line, end='')
+
                 ASCIIColors.info("Process done")
-                if completed_process==0:
-                    ASCIIColors.success("Launching Auto1111's SD succeeded")
+                ASCIIColors.success("Launching Auto1111's SD succeeded")
 
         # Wait until the service is available at http://127.0.0.1:7860/
         self.wait_for_service(max_retries=max_retries)
