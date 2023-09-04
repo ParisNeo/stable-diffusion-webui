@@ -191,6 +191,7 @@ class LollmsSD:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         if not self.wait_for_service(1,False):
             ASCIIColors.info("Loading lollms_sd")
+            os.environ['SD_WEBUI_RESTARTING'] = '1' # To forbid sd webui from showing on the browser automatically
             # Launch the Flask service using the appropriate script for the platform
             if platform.system() == "Windows":
                 ASCIIColors.info("Running on windows")
