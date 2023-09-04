@@ -181,6 +181,7 @@ class LollmsSD:
         ASCIIColors.red("| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |")
         ASCIIColors.red(" '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' ")
         ASCIIColors.red(" Forked from Auto1111's Stable diffusion")
+
         # Store the path to the script
         self.auto_sd_base_url = "http://127.0.0.1:7860"
         self.auto_sd_url = self.auto_sd_base_url+"/sdapi/v1"
@@ -192,11 +193,14 @@ class LollmsSD:
             ASCIIColors.info("Loading lollms_sd")
             # Launch the Flask service using the appropriate script for the platform
             if platform.system() == "Windows":
+                ASCIIColors.info("Running on windows")
                 script_path = self.sd_folder / "lollms_sd.bat"
                 subprocess.Popen(script_path, cwd=self.sd_folder)
             else:
+                ASCIIColors.info("Running on linux/MacOs")
                 script_path = str(self.sd_folder / "lollms_sd.sh")
                 completed_process = subprocess.run(['bash', script_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                ASCIIColors.info("Process done")
                 if completed_process==0:
                     ASCIIColors.success("Launching Auto1111's SD succeeded")
 
