@@ -202,11 +202,7 @@ class LollmsSD:
                 ASCIIColors.info(f"launcher path: {script_path}")
                 ASCIIColors.info(f"sd path: {self.sd_folder}")
 
-                with subprocess.Popen(['bash', script_path], cwd=self.sd_folder, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True) as process:
-                    for line in process.stdout:
-                        # Print the output line by line
-                        print(line, end='')
-
+                subprocess.Popen(['bash', script_path], cwd=self.sd_folder)
                 ASCIIColors.info("Process done")
                 ASCIIColors.success("Launching Auto1111's SD succeeded")
 
