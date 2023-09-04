@@ -180,10 +180,11 @@ class LollmsSD:
             # Launch the Flask service using the appropriate script for the platform
             if platform.system() == "Windows":
                 script_path = self.sd_folder / "lollms_webui.bat"
+                subprocess.Popen(script_path, cwd=self.sd_folder)
             else:
-                script_path = "bash " + str(self.sd_folder / "lollms_webui.sh")
+                script_path = str(self.sd_folder / "lollms_webui.sh")
+                completed_process = subprocess.run(['bash', script_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
 
-            subprocess.Popen(script_path, cwd=self.sd_folder)
 
         # Wait until the service is available at http://127.0.0.1:7860/
         self.wait_for_service(max_retries=max_retries)
