@@ -200,6 +200,7 @@ class LollmsSD:
                 ASCIIColors.info("Running on linux/MacOs")
                 script_path = str(self.sd_folder / "lollms_sd.sh")
                 ASCIIColors.info(f"launcher path: {script_path}")
+                ASCIIColors.info(f"sd path: {self.sd_folder}")
 
                 with subprocess.Popen(['bash', script_path], cwd=self.sd_folder, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True) as process:
                     for line in process.stdout:
