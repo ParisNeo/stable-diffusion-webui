@@ -180,7 +180,7 @@ class LollmsSD:
         ASCIIColors.red("| |              | || |              | || |              | || |              | || |              | || |              | || |  |_______|   | || |              | || |              | |")
         ASCIIColors.red("| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |")
         ASCIIColors.red(" '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' ")
-
+        ASCIIColors.red(" Forked from Auto1111's Stable diffusion")
         # Store the path to the script
         self.auto_sd_base_url = "http://127.0.0.1:7860"
         self.auto_sd_url = self.auto_sd_base_url+"/sdapi/v1"
@@ -197,7 +197,8 @@ class LollmsSD:
             else:
                 script_path = str(self.sd_folder / "lollms_sd.sh")
                 completed_process = subprocess.run(['bash', script_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-
+                if completed_process==0:
+                    ASCIIColors.success("Launching Auto1111's SD succeeded")
 
         # Wait until the service is available at http://127.0.0.1:7860/
         self.wait_for_service(max_retries=max_retries)
