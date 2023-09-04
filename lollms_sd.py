@@ -177,12 +177,13 @@ class LollmsSD:
         self.output_dir = root_dir / "outputs/sd"
         self.output_dir.mkdir(parents=True, exist_ok=True)
         if not self.wait_for_service(1,False):
+            ASCIIColors.info("Loading lollms_sd")
             # Launch the Flask service using the appropriate script for the platform
             if platform.system() == "Windows":
-                script_path = self.sd_folder / "lollms_webui.bat"
+                script_path = self.sd_folder / "lollms_sd.bat"
                 subprocess.Popen(script_path, cwd=self.sd_folder)
             else:
-                script_path = str(self.sd_folder / "lollms_webui.sh")
+                script_path = str(self.sd_folder / "lollms_sd.sh")
                 completed_process = subprocess.run(['bash', script_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
 
 
