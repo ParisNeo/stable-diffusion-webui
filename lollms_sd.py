@@ -623,8 +623,8 @@ class LollmsSD:
             payload["alwayson_scripts"]["ControlNet"] = {
                 "args": [x.to_dict() for x in controlnet_units]
             }
-        elif self.has_controlnet:
-            payload["alwayson_scripts"]["ControlNet"] = {"args": []}
+        #elif self.has_controlnet:
+        #    payload["alwayson_scripts"]["ControlNet"] = {"args": []}
 
         return self.post_and_get_api_result(
             f"{self.auto_sd_url}/img2img", payload, use_async
