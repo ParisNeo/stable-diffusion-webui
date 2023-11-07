@@ -481,9 +481,9 @@ class LollmsSD:
             payload["alwayson_scripts"]["ControlNet"] = {
                 "args": [x.to_dict() for x in controlnet_units]
             }
-        elif self.has_controlnet:
+        #elif self.has_controlnet:
             # workaround : if not passed, webui will use previous args!
-            payload["alwayson_scripts"]["ControlNet"] = {"args": []}
+        #    payload["alwayson_scripts"]["ControlNet"] = {"args": []}
 
         return self.post_and_get_api_result(
             f"{self.auto_sd_url}/txt2img", payload, use_async
