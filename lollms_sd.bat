@@ -50,7 +50,7 @@ set ACCELERATE="%VENV_DIR%\Scripts\accelerate.exe"
 if EXIST %ACCELERATE% goto :accelerate_launch
 
 :launch
-%PYTHON% launch.py %*
+%PYTHON% launch.py %* --listen
 if EXIST tmp/restart goto :skip_venv
 pause
 exit /b
