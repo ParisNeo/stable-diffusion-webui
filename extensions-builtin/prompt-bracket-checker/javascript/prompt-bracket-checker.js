@@ -4,11 +4,11 @@
 // If there's a mismatch, the keyword counter turns red and if you hover on it, a tooltip tells you what's wrong.
 
 function checkBrackets(textArea, counterElt) {
-    var counts = {};
-    (textArea.value.match(/[(){}[\]]/g) || []).forEach(bracket => {
-        counts[bracket] = (counts[bracket] || 0) + 1;
+    const counts = {};
+    textArea.value.matchAll(/(?<!\\)(?:\\\\)*?([(){}[\]])/g).forEach(bracket => {
+        counts[bracket[1]] = (counts[bracket[1]] || 0) + 1;
     });
-    var errors = [];
+    const errors = [];
 
     function checkPair(open, close, kind) {
         if (counts[open] !== counts[close]) {
